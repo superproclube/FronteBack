@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - SuperPro</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome para ícones -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- CSS Estilizado -->
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #006400, #28a745);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: #333;
+        }
+        .container {
+            background: #ffffff;
+            padding: 50px 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
+        }
+        .container h1 {
+            margin-bottom: 30px;
+            font-size: 2.2rem;
+            color: #28a745;
+        }
+        .form-group {
+            position: relative;
+            margin-bottom: 25px;
+        }
+        .form-group i {
+            position: absolute;
+            top: 50%;
+            left: 20px;
+            transform: translateY(-50%);
+            color: #28a745;
+            font-size: 1.1rem;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 14px 20px 14px 50px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            transition: border-color 0.3s;
+        }
+        .form-group input:focus {
+            border-color: #28a745;
+            outline: none;
+        }
+        button {
+            width: 100%;
+            padding: 14px;
+            background: #28a745;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.2s;
+        }
+        button:hover {
+            background: #218838;
+            transform: translateY(-2px);
+        }
+        button:active {
+            transform: translateY(0);
+        }
+        .message {
+            color: #e11d48;
+            font-size: 0.95rem;
+            margin-top: 10px;
+            text-align: center;
+        }
+        .message.success {
+            color: #10b981;
+        }
+        .links {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+            font-size: 0.95rem;
+        }
+        .links a {
+            color: #28a745;
+            text-decoration: none;
+            transition: color 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .links a:hover {
+            color: #218838;
+            text-decoration: underline;
+        }
+        .links a i {
+            font-size: 0.9rem;
+        }
+        @media (max-width: 600px) {
+            .container {
+                padding: 40px 30px;
+                max-width: 90%;
+            }
+            .container h1 {
+                font-size: 2rem;
+            }
+            .form-group input {
+                padding: 12px 18px 12px 45px;
+                font-size: 1rem;
+            }
+            .form-group i {
+                left: 15px;
+                font-size: 1rem;
+            }
+            .button {
+                padding: 12px;
+                font-size: 1rem;
+            }
+            .message {
+                font-size: 0.95rem;
+            }
+            .links {
+                flex-direction: column;
+                gap: 15px;
+            }
+            .links a {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Login</h1>
+        <form id="login-form">
+            <div class="form-group">
+                <i class="fas fa-envelope"></i>
+                <input type="email" id="email" placeholder="E-mail" required aria-label="E-mail">
+            </div>
+            <div class="form-group">
+                <i class="fas fa-lock"></i>
+                <input type="password" id="password" placeholder="Senha" required aria-label="Senha">
+            </div>
+            <button type="submit">Entrar</button>
+            <div id="message" class="message" role="alert" aria-live="assertive"></div>
+            <div class="links">
+                <a href="forgot-password.html"><i class="fas fa-key"></i> Esqueceu sua senha?</a>
+                <a href="index.html"><i class="fas fa-home"></i> Voltar para o site</a>
+            </div>
+        </form>
+    </div>
+
+    <script src="js/auth.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const loginForm = document.getElementById('login-form');
+            if (loginForm) {
+                loginForm.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    
+                    const email = document.getElementById('email').value;
+                    const password = document.getElementById('password').value;
+                    const messageDiv = document.getElementById('message');
+                    
+                    try {
+                        const result = await login(email, password);
+                        
+                        if (result.success) {
+                            messageDiv.classList.add('success');
+                            messageDiv.textContent = 'Login realizado com sucesso! Redirecionando...';
+                            setTimeout(() => {
+                                window.location.href = 'index3.html';
+                            }, 1000);
+                        } else {
+                            messageDiv.textContent = result.error;
+                        }
+                    } catch (error) {
+                        messageDiv.textContent = 'Erro ao fazer login. Tente novamente.';
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
