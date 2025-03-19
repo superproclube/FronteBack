@@ -366,7 +366,7 @@
 
   // === Configurações das APIs ===
   // Utilizamos um servidor proxy para acessar a API sem expor a chave
-  const URL_BASE = "https://superpro2025.onrender.com";
+  const BASE_URL = "https://superpro2025.onrender.com";
   // A API do BetMiner é acessada via nosso servidor proxy e a API‑Sports permanece para dados históricos
   const URL_FUTEBOL_BASE = "https://v3.football.api-sports.io";
   const CABECALHOS_FUTEBOL = {
@@ -389,7 +389,7 @@
   const buscarJogosDiarios = async () => {
     const dataHoje = obterDataAtual();
     const endpoint = `/api/sports?dateFrom=${encodeURIComponent(dataHoje)}&dateTo=${encodeURIComponent(dataHoje)}`;
-    const urlCompleta = URL_BASE + endpoint;
+    const urlCompleta = BASE_URL + endpoint;
     try {
       registrarLog("Buscando jogos do dia...");
       const resposta = await fetch(urlCompleta, { method: "GET" });
@@ -841,7 +841,7 @@
       searchButton.addEventListener('click', async () => {
         try {
           const today = new Date().toISOString().split('T')[0];
-          const response = await fetch(`https://superpro2025.onrender.com/api/sports?dateFrom=${today}&dateTo=${today}`);
+          const response = await fetch(`${BASE_URL}/api/sports?dateFrom=${today}&dateTo=${today}`);
           
           if (!response.ok) {
             throw new Error('Erro ao buscar dados');
