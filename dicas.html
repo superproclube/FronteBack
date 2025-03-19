@@ -810,4 +810,98 @@
     localStorage.removeItem("authToken");
     window.location.href = "index.html";
   });
+
+  document.addEventListener('DOMContentLoaded', function() {
+    // Botão de menu mobile
+    const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+    const sidebar = document.querySelector('.sidebar');
+    const overlay = document.querySelector('.overlay');
+    const closeBtn = document.querySelector('.close-btn');
+
+    if (mobileMenuBtn && sidebar && overlay && closeBtn) {
+      mobileMenuBtn.addEventListener('click', () => {
+        sidebar.classList.add('active');
+        overlay.classList.add('active');
+      });
+
+      closeBtn.addEventListener('click', () => {
+        sidebar.classList.remove('active');
+        overlay.classList.remove('active');
+      });
+
+      overlay.addEventListener('click', () => {
+        sidebar.classList.remove('active');
+        overlay.classList.remove('active');
+      });
+    }
+
+    // Botão de busca
+    const searchButton = document.querySelector('.search-section button');
+    if (searchButton) {
+      searchButton.addEventListener('click', async () => {
+        try {
+          const today = new Date().toISOString().split('T')[0];
+          const response = await fetch(`https://superpro2025.onrender.com/api/sports?dateFrom=${today}&dateTo=${today}`);
+          
+          if (!response.ok) {
+            throw new Error('Erro ao buscar dados');
+          }
+          
+          const data = await response.json();
+          displayResults(data);
+        } catch (error) {
+          console.error('Erro:', error);
+          alert('Erro ao buscar dados. Tente novamente.');
+        }
+      });
+    }
+  });
+
+  function displayResults(data) {
+    const resultsSection = document.querySelector('.results-section');
+    if (!resultsSection) return;
+
+    resultsSection.innerHTML = '';
+    
+    if (!data || data.length === 0) {
+      resultsSection.innerHTML = '<p>Nenhuma dica disponível para hoje.</p>';
+      return;
+    }
+
+    data.forEach(match => {
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.innerHTML = `
+        <div class="card-header">
+          <img src="${match.league_logo || 'default-logo.png'}" alt="${match.league_name}">
+          <div class="info">
+            <strong>${match.league_name}</strong>
+            <div>${match.home_team} vs ${match.away_team}</div>
+          </div>
+        </div>
+        <div class="card-body">
+          <p>Data: ${new Date(match.match_time).toLocaleString()}</p>
+          <p>Probabilidade: ${match.probability}%</p>
+        </div>
+        <div class="card-footer">
+          <span class="badge ${getConfidenceClass(match.probability)}">
+            ${getConfidenceText(match.probability)}
+          </span>
+        </div>
+      `;
+      resultsSection.appendChild(card);
+    });
+  }
+
+  function getConfidenceClass(probability) {
+    if (probability >= 70) return 'high';
+    if (probability >= 50) return 'medium';
+    return 'low';
+  }
+
+  function getConfidenceText(probability) {
+    if (probability >= 70) return 'Alta Confiança';
+    if (probability >= 50) return 'Média Confiança';
+    return 'Baixa Confiança';
+  }
 </script>
